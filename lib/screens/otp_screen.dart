@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class OTPScreen extends StatefulWidget {
+  String mobileNumber;
+  OTPScreen({required this.mobileNumber});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState(
-
+  _OTPScreenState createState() => _OTPScreenState(
+      mobileNumber: mobileNumber
   );
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-
+class _OTPScreenState extends State<OTPScreen> {
+  String mobileNumber;
+  _OTPScreenState({required this.mobileNumber});
   final PhoneController pController = Get.put(PhoneController());
+  TextEditingController _mobileController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,30 +34,21 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: GetX<PhoneController>(builder: (controller) {
               // ignore: unrelated_type_equality_checks
-              return Container(
+              return controller.loading == true
+                  ? Loader.dualRingLoader(AppColor.primaryColor)
+                  : Container(
                 height: SizeConfig.screenHeight -
                     MediaQuery.of(context).padding.top,
                 width: SizeConfig.screenWidth,
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.widthMultiplier * 15),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+
                     Text(
-                      '${controller.mobile.value}',
-                      textAlign: TextAlign.center,
-                      style: Get.textTheme.bodyText1!.copyWith(
-                        color: AppColor.primaryColor,
-                        fontSize: SizeConfig.textMultiplier * 4.5,
-                        // height: Get.height * 0.036,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.heightMultiplier * 8,
-                    ),
-                    Text(
-                      'Successfully Logged In',
+                      'OTP',
                       textAlign: TextAlign.center,
                       style: Get.textTheme.bodyText1!.copyWith(
                         color: AppColor.darkColor1,
@@ -57,6 +56,153 @@ class _HomeScreenState extends State<HomeScreen> {
                         // height: Get.height * 0.036,
                       ),
                     ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier * 2,
+                    ),
+                    Text(
+                      '(One Time Password)',
+                      textAlign: TextAlign.center,
+                      style: Get.textTheme.headline1!.copyWith(
+                        color: AppColor.darkColor1,
+                        fontSize: SizeConfig.textMultiplier * 2.5,
+                        // height: Get.height * 0.036,
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier * 1.5,
+                    ),
+                    TextFormField(
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(6),
+                      ],
+
+                      controller: _mobileController,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val) {
+                        if (_mobileController.text.length <= 6) {}
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: AppColor.appBlue),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: AppColor.appBlue),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.primaryColor),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.secondaryColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                          BorderSide(color: AppColor.appBlue),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColor.secondaryColor),
+                        ),
+                        hintText: 'Six Digit Code',
+                        hintStyle:Get.textTheme.bodyText2!.copyWith(
+                          color:
+                          AppColor.blackColor.withOpacity(0.5),
+                          fontSize: SizeConfig.textMultiplier * 1.5,
+                          // height: Get.height * 0.036,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier * 2.5,
+                    ),
+                    Container(
+                      width: SizeConfig.screenWidth * 0.5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _mobileController.clear();
+                              controller.signInWithPhone(phoneNumber: mobileNumber);
+                            },
+                            child: Container(
+                              // width: SizeConfig.widthMultiplier * 30,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                  SizeConfig.widthMultiplier * 8,
+                                  vertical:
+                                  SizeConfig.heightMultiplier *
+                                      1),
+                              decoration: BoxDecoration(
+                                  color: AppColor.darkColor1,
+                                  borderRadius:
+                                  BorderRadius.circular(10)),
+                              // ignore: deprecated_member_use
+                              child: Center(
+                                child: Text(
+                                  'Resend',
+                                  style: Get.textTheme.bodyText2!
+                                      .copyWith(
+                                    color: Colors.white,
+                                    fontSize:
+                                    SizeConfig.textMultiplier *
+                                        1.5,
+                                    // height: Get.height * 0.036,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.heightMultiplier * 5,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Get.to(() => CreateProfileScreen());
+
+                        if(_mobileController.text.length == 6){
+                          controller.myCredentials(
+                              controller.verId_result,
+                              _mobileController.text,
+                              mobileNumber
+                          );
+                        }else{
+                          DialogWidget.errorDialog(context, 'Enter a valid OTP', (){
+
+                          });
+                        }
+                      },
+                      child: Container(
+                        width: SizeConfig.widthMultiplier * 35,
+                        padding: EdgeInsets.symmetric(
+                            horizontal:
+                            SizeConfig.widthMultiplier * 8,
+                            vertical:
+                            SizeConfig.heightMultiplier * 1.25),
+                        decoration: BoxDecoration(
+                            color: AppColor.appBlue,
+                            borderRadius: BorderRadius.circular(5)),
+                        // ignore: deprecated_member_use
+                        child: Center(
+                          child: Text(
+                            'Continue',
+                            style: Get.textTheme.bodyText2!.copyWith(
+                              color: Colors.white,
+                              fontSize:
+                              SizeConfig.textMultiplier * 1.5,
+                              // height: Get.height * 0.036,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               );
