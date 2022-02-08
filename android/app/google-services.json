@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "96913376099",
+    "project_id": "mobi-authentic-firbase",
+    "storage_bucket": "mobi-authentic-firbase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96913376099:android:8cd101c3962b0562d58956",
+        "android_client_info": {
+          "package_name": "kz.faizulla.mobi_authentic_firbase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "96913376099-14ub17js5udau70oj6pm9v9aatllfv51.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kz.faizulla.mobi_authentic_firbase",
+            "certificate_hash": "4120f84c48debcfd78bb2d85a7783ce7517cb835"
+          }
+        },
+        {
+          "client_id": "96913376099-kdv1gf4f785a7bhid20mr9p9q7jccsj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWNCMnulASJC7BmnLZuxBnsFTZTrGDURU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "96913376099-kdv1gf4f785a7bhid20mr9p9q7jccsj7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
